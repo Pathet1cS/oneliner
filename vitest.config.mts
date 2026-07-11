@@ -6,14 +6,15 @@ export default defineConfig({
   plugins: [react()],
   test: {
     globals: true,
-    environment: 'jsdom',
+    environment: 'happy-dom',
     setupFiles: ['./vitest.setup.ts'],
     alias: {
       '@': path.resolve(__dirname, './src')
     },
+    css: false,
     server: {
       deps: {
-        inline: [/^(?!.*vitest).*$/]
+        inline: ['@asamuzakjp/css-color', '@csstools/css-calc', '@csstools/css-color-parser']
       }
     }
   }

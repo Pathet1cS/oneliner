@@ -25,6 +25,7 @@
     "@vitest/ui": "^4.1.10",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
+    "happy-dom": "^20.10.6",
     "jsdom": "^27.0.1",
     "tailwindcss": "^4",
     "typescript": "^5",
