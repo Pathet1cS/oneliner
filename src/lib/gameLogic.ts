@@ -8,13 +8,25 @@ function mulberry32(a: number) {
   }
 }
 
+export const GRID_SIZE = 7;
+export const MAX_PATH_LENGTH = 20;
+
 export function generatePuzzle(dateStr: string) {
-  const seed = parseInt(dateStr.replace(/-/g, ''));
+  if (!dateStr || dateStr.trim() === '') {
+    throw new Error('Invalid date string: cannot be empty');
+  }
+
+  const parsedSeed = parseInt(dateStr.replace(/-/g, ''), 10);
+  if (isNaN(parsedSeed)) {
+    throw new Error('Invalid date string: must contain valid numbers');
+  }
+  
+  const seed = parsedSeed;
   const random = mulberry32(seed);
   
-  let grid = Array(7).fill(0).map(() => Array(7).fill(false));
-  let x = Math.floor(random() * 7);
-  let y = Math.floor(random() * 7);
+  let grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(false));
+  let x = Math.floor(random() * GRID_SIZE);
+  let y = Math.floor(random() * GRID_SIZE);
   
   const startPos = { x, y };
   const activeCells = [{ x, y }];
@@ -22,14 +34,19 @@ export function generatePuzzle(dateStr: string) {
   
   const dirs = [{dx: 0, dy: -1}, {dx: 1, dy: 0}, {dx: 0, dy: 1}, {dx: -1, dy: 0}];
   
-  for (let i = 1; i < 20; i++) {
-    // shuffle dirs
-    let shuffledDirs = [...dirs].sort(() => random() - 0.5);
+  for (let i = 1; i < MAX_PATH_LENGTH; i++) {
+    // shuffle dirs using Fisher-Yates
+    let shuffledDirs = [...dirs];
+    for (let j = shuffledDirs.length - 1; j > 0; j--) {
+      const k = Math.floor(random() * (j + 1));
+      [shuffledDirs[j], shuffledDirs[k]] = [shuffledDirs[k], shuffledDirs[j]];
+    }
+    
     let moved = false;
     for (let {dx, dy} of shuffledDirs) {
       const nx = x + dx;
       const ny = y + dy;
-      if (nx >= 0 && nx < 7 && ny >= 0 && ny < 7 && !grid[ny][nx]) {
+      if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE && !grid[ny][nx]) {
         x = nx;
         y = ny;
         grid[y][x] = true;
