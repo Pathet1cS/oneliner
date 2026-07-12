@@ -9,7 +9,7 @@ function mulberry32(a: number) {
 }
 
 export const GRID_SIZE = 7;
-export const MAX_PATH_LENGTH = 20;
+export const MAX_PATH_LENGTH = 40;
 
 export function generatePuzzle(dateStr: string) {
   if (!dateStr || dateStr.trim() === '') {
@@ -24,39 +24,54 @@ export function generatePuzzle(dateStr: string) {
   const seed = parsedSeed;
   const random = mulberry32(seed);
   
-  let grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(false));
-  let x = Math.floor(random() * GRID_SIZE);
-  let y = Math.floor(random() * GRID_SIZE);
-  
-  const startPos = { x, y };
-  const activeCells = [{ x, y }];
-  grid[y][x] = true;
+  let startX = Math.floor(random() * GRID_SIZE);
+  let startY = Math.floor(random() * GRID_SIZE);
+  const startPos = { x: startX, y: startY };
   
   const dirs = [{dx: 0, dy: -1}, {dx: 1, dy: 0}, {dx: 0, dy: 1}, {dx: -1, dy: 0}];
+  let finalPath: {x: number, y: number}[] | null = null;
   
-  for (let i = 1; i < MAX_PATH_LENGTH; i++) {
-    // shuffle dirs using Fisher-Yates
+  function dfs(currentPath: {x: number, y: number}[], grid: boolean[][]) {
+    if (finalPath) return; 
+    
+    if (currentPath.length === MAX_PATH_LENGTH) {
+      finalPath = [...currentPath];
+      return;
+    }
+    
+    const last = currentPath[currentPath.length - 1];
+    
+    // shuffle dirs
     let shuffledDirs = [...dirs];
     for (let j = shuffledDirs.length - 1; j > 0; j--) {
       const k = Math.floor(random() * (j + 1));
       [shuffledDirs[j], shuffledDirs[k]] = [shuffledDirs[k], shuffledDirs[j]];
     }
     
-    let moved = false;
     for (let {dx, dy} of shuffledDirs) {
-      const nx = x + dx;
-      const ny = y + dy;
+      const nx = last.x + dx;
+      const ny = last.y + dy;
+      
       if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE && !grid[ny][nx]) {
-        x = nx;
-        y = ny;
-        grid[y][x] = true;
-        activeCells.push({ x, y });
-        moved = true;
-        break;
+        grid[ny][nx] = true;
+        currentPath.push({x: nx, y: ny});
+        
+        dfs(currentPath, grid);
+        if (finalPath) return;
+        
+        currentPath.pop();
+        grid[ny][nx] = false;
       }
     }
-    if (!moved) break;
   }
   
-  return { activeCells, startPos };
+  let grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(false));
+  grid[startY][startX] = true;
+  dfs([{x: startX, y: startY}], grid);
+  
+  if (!finalPath) {
+    throw new Error('Could not generate puzzle of required length');
+  }
+  
+  return { activeCells: finalPath, startPos };
 }
