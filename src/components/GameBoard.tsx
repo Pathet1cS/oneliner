@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export type Point = { x: number; y: number };
 
@@ -67,10 +68,12 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
           const connectRight = (prevPath?.x === x + 1 && prevPath?.y === y) || (nextPath?.x === x + 1 && nextPath?.y === y);
 
           return (
-            <div 
+            <motion.div 
               key={i} 
               data-testid={`cell-${x}-${y}`}
               className={`relative cell w-10 h-10 md:w-16 md:h-16 select-none touch-none transition-none border-2 border-transparent ${active && !visited ? 'active bg-[#1A2548] border-[#F7AF4C] border-opacity-30' : ''} ${visited ? 'bg-[#F7AF4C] border-black shadow-[4px_4px_0px_#000000] z-10' : 'z-0'}`}
+              whileHover={active && !visited ? { scale: 1.1 } : {}}
+              whileTap={active ? { scale: 0.9 } : {}}
               onPointerDown={(e) => { e.currentTarget.releasePointerCapture(e.pointerId); handlePointerDown(x, y); }}
               onPointerEnter={() => handlePointerEnter(x, y)}
             >
@@ -84,14 +87,34 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
                   {connectRight && <div className="absolute right-0 top-1/2 -translate-y-1/2 h-4 md:h-6 w-1/2 bg-white z-10 pointer-events-none" />}
                 </>
               )}
-            </div>
+            </motion.div>
           );
         })}
         {won && (
-          <div className="absolute inset-0 bg-white/60 backdrop-blur-sm z-50 flex flex-col items-center justify-center">
-            <div className="text-4xl md:text-5xl text-pink-500 font-extrabold animate-bounce drop-shadow-md text-center leading-tight">
-              Puzzle<br/>Solved! 🎉
-            </div>
+          <div className="absolute inset-0 bg-[#334173]/90 z-50 flex flex-col items-center justify-center">
+            {/* Win Particles */}
+            {Array.from({ length: 20 }).map((_, i) => (
+              <motion.div
+                key={`particle-${i}`}
+                className="absolute w-4 h-4 bg-[#F7AF4C] border-2 border-black pointer-events-none"
+                initial={{ opacity: 1, x: 0, y: 0 }}
+                animate={{ 
+                  opacity: 0, 
+                  x: (Math.random() - 0.5) * 400, 
+                  y: (Math.random() - 0.5) * 400,
+                  rotate: Math.random() * 360
+                }}
+                transition={{ duration: 1, ease: "easeOut" }}
+              />
+            ))}
+            <motion.div 
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", bounce: 0.6 }}
+              className="text-4xl md:text-5xl text-white font-extrabold shadow-[4px_4px_0px_#000000] text-center uppercase"
+            >
+              Level<br/>Cleared!
+            </motion.div>
           </div>
         )}
       </div>
