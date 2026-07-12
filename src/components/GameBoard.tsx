@@ -46,7 +46,7 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
   return (
     <div className="flex flex-col items-center">
       <div 
-        className="grid grid-cols-7 gap-3 bg-white p-6 rounded-3xl shadow-xl shadow-pink-100/50 relative overflow-hidden"
+        className="grid grid-cols-7 gap-3 bg-white p-6 shadow-[8px_8px_0px_#000000] relative overflow-hidden border-4 border-black"
         onPointerUp={() => setIsDrawing(false)}
         onPointerLeave={() => setIsDrawing(false)}
       >
@@ -70,18 +70,18 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
             <div 
               key={i} 
               data-testid={`cell-${x}-${y}`}
-              className={`relative cell w-10 h-10 md:w-16 md:h-16 rounded-2xl select-none touch-none transition-all duration-150 ${active && !visited ? 'active bg-indigo-50 ring-2 ring-inset ring-indigo-100 shadow-sm' : ''} ${visited ? 'bg-pink-100 ring-2 ring-inset ring-pink-200 shadow-sm z-10' : 'z-0'}`}
+              className={`relative cell w-10 h-10 md:w-16 md:h-16 select-none touch-none transition-none border-2 border-transparent ${active && !visited ? 'active bg-[#1A2548] border-[#F7AF4C] border-opacity-30' : ''} ${visited ? 'bg-[#F7AF4C] border-black shadow-[4px_4px_0px_#000000] z-10' : 'z-0'}`}
               onPointerDown={(e) => { e.currentTarget.releasePointerCapture(e.pointerId); handlePointerDown(x, y); }}
               onPointerEnter={() => handlePointerEnter(x, y)}
             >
               {active && (
                 <>
-                  {isStart && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 md:w-8 md:h-8 bg-pink-400 rounded-full z-20 shadow-[0_0_15px_rgba(139,92,246,0.6)] pointer-events-none ring-4 ring-white/30" />}
-                  {visited && !isStart && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 md:w-6 md:h-6 bg-pink-500 rounded-full z-10 pointer-events-none" />}
-                  {connectTop && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 md:w-6 h-1/2 bg-pink-500 z-10 pointer-events-none" />}
-                  {connectBottom && <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 md:w-6 h-1/2 bg-pink-500 z-10 pointer-events-none" />}
-                  {connectLeft && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-4 md:h-6 w-1/2 bg-pink-500 z-10 pointer-events-none" />}
-                  {connectRight && <div className="absolute right-0 top-1/2 -translate-y-1/2 h-4 md:h-6 w-1/2 bg-pink-500 z-10 pointer-events-none" />}
+                  {isStart && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 md:w-8 md:h-8 bg-white border-2 border-black z-20 pointer-events-none" />}
+                  {visited && !isStart && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 md:w-6 md:h-6 bg-white z-10 pointer-events-none" />}
+                  {connectTop && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 md:w-6 h-1/2 bg-white z-10 pointer-events-none" />}
+                  {connectBottom && <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 md:w-6 h-1/2 bg-white z-10 pointer-events-none" />}
+                  {connectLeft && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-4 md:h-6 w-1/2 bg-white z-10 pointer-events-none" />}
+                  {connectRight && <div className="absolute right-0 top-1/2 -translate-y-1/2 h-4 md:h-6 w-1/2 bg-white z-10 pointer-events-none" />}
                 </>
               )}
             </div>
@@ -96,7 +96,7 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
         )}
       </div>
       <div className="mt-10 flex gap-4">
-        <button onClick={() => setPath([startPos])} className="px-8 py-3 bg-violet-500 rounded-full text-white font-bold tracking-wide shadow-[0_4px_0_0_#7c3aed] active:translate-y-1 active:shadow-none transition-all">Reset</button>
+        <button onClick={() => setPath([startPos])} className="px-8 py-3 bg-[#F7AF4C] text-black font-bold tracking-widest uppercase border-4 border-black shadow-[4px_4px_0px_#000000] hover:translate-y-1 hover:shadow-[2px_2px_0px_#000000] transition-all">Reset</button>
       </div>
     </div>
   );
