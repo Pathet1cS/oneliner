@@ -1,3 +1,20 @@
+# Randomize Daily Path Length Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Modify the puzzle generator so the path length is randomized between 20 and 45 based on the daily seed.
+
+**Architecture:** Replace the static `MAX_PATH_LENGTH` constant with a dynamic `targetLength` computed inside `generatePuzzle`.
+
+**Tech Stack:** TypeScript, Vitest
+
+## Global Constraints
+
+- Must keep `mulberry32` PRNG tied to the date string for determinism.
+- The target length must be computed using `random()`.
+
+---
+
 ### Task 1: Dynamic Path Length Implementation
 
 **Files:**

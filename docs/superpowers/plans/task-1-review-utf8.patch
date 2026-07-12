@@ -1,0 +1,25 @@
+﻿dddf773 chore: initial next.js scaffold with vitest
+ .gitignore                              |   41 +
+ AGENTS.md                               |    5 +
+ CLAUDE.md                               |    1 +
+ README.md                               |   36 +
+ docs/superpowers/plans/task-1-brief.md  |   48 +
+ docs/superpowers/plans/task-1-report.md |   16 +
+ eslint.config.mjs                       |   18 +
+ next.config.ts                          |    7 +
+ package-lock.json                       | 9124 +++++++++++++++++++++++++++++++
+ package.json                            |   33 +
+ postcss.config.mjs                      |    7 +
+ public/file.svg                         |    1 +
+ public/globe.svg                        |    1 +
+ public/next.svg                         |    1 +
+ public/vercel.svg                       |    1 +
+ public/window.svg                       |    1 +
+ src/app/favicon.ico                     |  Bin 0 -> 25931 bytes
+ src/app/globals.css                     |   26 +
+ src/app/layout.tsx                      |   33 +
+ src/app/page.tsx                        |   65 +
+ tsconfig.json                           |   34 +
+ vitest.config.mts                       |   14 +
+ vitest.setup.ts                         |    1 +
+ 23 files changed, 9514 insertions(+)

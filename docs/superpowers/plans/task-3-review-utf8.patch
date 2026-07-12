@@ -1,0 +1,499 @@
+﻿abc7256 fix(GameBoard): improve rendering performance, fix timezone bug, and add comprehensive tests
+8313eed feat: GameBoard component and drawing logic
+ package-lock.json            | 105 +++++++++++++++++++++++++++++++++++++++++--
+ package.json                 |   1 +
+ src/components/GameBoard.tsx |  76 +++++++++++++++++++++++++++++++
+ tests/GameBoard.test.tsx     |  65 +++++++++++++++++++++++++++
+ vitest.config.mts            |   5 ++-
+ 5 files changed, 246 insertions(+), 6 deletions(-)
+diff --git a/package-lock.json b/package-lock.json
+index ca52d9e..7f44f93 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -16,20 +16,21 @@
+         "@tailwindcss/postcss": "^4",
+         "@testing-library/jest-dom": "^6.9.1",
+         "@testing-library/react": "^16.3.2",
+         "@types/node": "^20",
+         "@types/react": "^19",
+         "@types/react-dom": "^19",
+         "@vitejs/plugin-react": "^4.7.0",
+         "@vitest/ui": "^4.1.10",
+         "eslint": "^9",
+         "eslint-config-next": "16.2.10",
++        "happy-dom": "^20.10.6",
+         "jsdom": "^27.0.1",
+         "tailwindcss": "^4",
+         "typescript": "^5",
+         "vitest": "^4.1.10"
+       }
+     },
+     "node_modules/@adobe/css-tools": {
+       "version": "4.5.0",
+       "resolved": "https://registry.npmjs.org/@adobe/css-tools/-/css-tools-4.5.0.tgz",
+       "integrity": "sha512-6OzddxPio9UiWTCemp4N8cYLV2ZN1ncRnV1cVGtve7dhPOtRkleRyx32GQCYSwDYgaHU3USMm84tNsvKzRCa1Q==",
+@@ -533,23 +534,23 @@
+           "url": "https://opencollective.com/csstools"
+         }
+       ],
+       "license": "MIT",
+       "peer": true,
+       "engines": {
+         "node": ">=20.19.0"
+       }
+     },
+     "node_modules/@emnapi/wasi-threads": {
+-      "version": "1.2.1",
+-      "resolved": "https://registry.npmjs.org/@emnapi/wasi-threads/-/wasi-threads-1.2.1.tgz",
+-      "integrity": "sha512-uTII7OYF+/Mes/MrcIOYp5yOtSMLBWSIoLPpcgwipoiKbli6k322tcoFsxoIIxPDqW01SQGAgko4EzZi2BNv2w==",
++      "version": "1.2.2",
++      "resolved": "https://registry.npmjs.org/@emnapi/wasi-threads/-/wasi-threads-1.2.2.tgz",
++      "integrity": "sha512-c95qOXkHdydNKhscBTebqEC1CVAZpyqOfVfBzQ1qgzyl3gfeldUjIggDbIZgDKsHLgnsM+igH7TJ/eAasaVuMA==",
+       "dev": true,
+       "license": "MIT",
+       "optional": true,
+       "dependencies": {
+         "tslib": "^2.4.0"
+       }
+     },
+     "node_modules/@esbuild/aix-ppc64": {
+       "version": "0.25.12",
+       "resolved": "https://registry.npmjs.org/@esbuild/aix-ppc64/-/aix-ppc64-0.25.12.tgz",
+@@ -2800,20 +2801,37 @@
+       "version": "19.2.3",
+       "resolved": "https://registry.npmjs.org/@types/react-dom/-/react-dom-19.2.3.tgz",
+       "integrity": "sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==",
+       "dev": true,
+       "license": "MIT",
+       "peer": true,
+       "peerDependencies": {
+         "@types/react": "^19.2.0"
+       }
+     },
++    "node_modules/@types/whatwg-mimetype": {
++      "version": "3.0.2",
++      "resolved": "https://registry.npmjs.org/@types/whatwg-mimetype/-/whatwg-mimetype-3.0.2.tgz",
++      "integrity": "sha512-c2AKvDT8ToxLIOUlN51gTiHXflsfIFisS4pO7pDPoKouJCESkhZnEy623gwP9laCy5lnLDAw1vAzu2vM2YLOrA==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/@types/ws": {
++      "version": "8.18.1",
++      "resolved": "https://registry.npmjs.org/@types/ws/-/ws-8.18.1.tgz",
++      "integrity": "sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@types/node": "*"
++      }
++    },
+     "node_modules/@typescript-eslint/eslint-plugin": {
+       "version": "8.63.0",
+       "resolved": "https://registry.npmjs.org/@typescript-eslint/eslint-plugin/-/eslint-plugin-8.63.0.tgz",
+       "integrity": "sha512-rvwSgqT+DHpWdzfSzPatRLm02a0GlESt++9iy3hLCDY4BgkaLcl8LBi9Yh7XGFBpwcBE/K3024QuXWTpbz4FfQ==",
+       "dev": true,
+       "license": "MIT",
+       "dependencies": {
+         "@eslint-community/regexpp": "^4.12.2",
+         "@typescript-eslint/scope-manager": "8.63.0",
+         "@typescript-eslint/type-utils": "8.63.0",
+@@ -3367,31 +3385,54 @@
+       "optional": true,
+       "dependencies": {
+         "@emnapi/core": "1.10.0",
+         "@emnapi/runtime": "1.10.0",
+         "@napi-rs/wasm-runtime": "^1.1.4"
+       },
+       "engines": {
+         "node": ">=14.0.0"
+       }
+     },
++    "node_modules/@unrs/resolver-binding-wasm32-wasi/node_modules/@emnapi/core": {
++      "version": "1.10.0",
++      "resolved": "https://registry.npmjs.org/@emnapi/core/-/core-1.10.0.tgz",
++      "integrity": "sha512-yq6OkJ4p82CAfPl0u9mQebQHKPJkY7WrIuk205cTYnYe+k2Z8YBh11FrbRG/H6ihirqcacOgl2BIO8oyMQLeXw==",
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "dependencies": {
++        "@emnapi/wasi-threads": "1.2.1",
++        "tslib": "^2.4.0"
++      }
++    },
+     "node_modules/@unrs/resolver-binding-wasm32-wasi/node_modules/@emnapi/runtime": {
+       "version": "1.10.0",
+       "resolved": "https://registry.npmjs.org/@emnapi/runtime/-/runtime-1.10.0.tgz",
+       "integrity": "sha512-ewvYlk86xUoGI0zQRNq/mC+16R1QeDlKQy21Ki3oSYXNgLb45GV1P6A0M+/s6nyCuNDqe5VpaY84BzXGwVbwFA==",
+       "dev": true,
+       "license": "MIT",
+       "optional": true,
+       "dependencies": {
+         "tslib": "^2.4.0"
+       }
+     },
++    "node_modules/@unrs/resolver-binding-wasm32-wasi/node_modules/@emnapi/wasi-threads": {
++      "version": "1.2.1",
++      "resolved": "https://registry.npmjs.org/@emnapi/wasi-threads/-/wasi-threads-1.2.1.tgz",
++      "integrity": "sha512-uTII7OYF+/Mes/MrcIOYp5yOtSMLBWSIoLPpcgwipoiKbli6k322tcoFsxoIIxPDqW01SQGAgko4EzZi2BNv2w==",
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "dependencies": {
++        "tslib": "^2.4.0"
++      }
++    },
+     "node_modules/@unrs/resolver-binding-win32-arm64-msvc": {
+       "version": "1.12.2",
+       "resolved": "https://registry.npmjs.org/@unrs/resolver-binding-win32-arm64-msvc/-/resolver-binding-win32-arm64-msvc-1.12.2.tgz",
+       "integrity": "sha512-qzNyg3xL0VPQmCaUh+N5jSitce6k+uCBfMDesWRnlULOZaqUkaJ0ybdT+UqlAWJoQjuqfIU/0Ptx9bteN4D82g==",
+       "cpu": [
+         "arm64"
+       ],
+       "dev": true,
+       "license": "MIT",
+       "optional": true,
+@@ -3982,20 +4023,33 @@
+         "node-releases": "^2.0.50",
+         "update-browserslist-db": "^1.2.3"
+       },
+       "bin": {
+         "browserslist": "cli.js"
+       },
+       "engines": {
+         "node": "^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7"
+       }
+     },
++    "node_modules/buffer-image-size": {
++      "version": "0.6.4",
++      "resolved": "https://registry.npmjs.org/buffer-image-size/-/buffer-image-size-0.6.4.tgz",
++      "integrity": "sha512-nEh+kZOPY1w+gcCMobZ6ETUp9WfibndnosbpwB1iJk/8Gt5ZF2bhS6+B6bPYz424KtwsR6Rflc3tCz1/ghX2dQ==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@types/node": "*"
++      },
++      "engines": {
++        "node": ">=4.0"
++      }
++    },
+     "node_modules/call-bind": {
+       "version": "1.0.9",
+       "resolved": "https://registry.npmjs.org/call-bind/-/call-bind-1.0.9.tgz",
+       "integrity": "sha512-a/hy+pNsFUTR+Iz8TCJvXudKVLAnz/DyeSUo10I5yvFDQJBFU2s9uqQpoSrJlroHUKoKqzg+epxyP9lqFdzfBQ==",
+       "dev": true,
+       "license": "MIT",
+       "dependencies": {
+         "call-bind-apply-helpers": "^1.0.2",
+         "es-define-property": "^1.0.1",
+         "get-intrinsic": "^1.3.0",
+@@ -4150,21 +4204,20 @@
+       "engines": {
+         "node": ">= 8"
+       }
+     },
+     "node_modules/css-tree": {
+       "version": "3.2.1",
+       "resolved": "https://registry.npmjs.org/css-tree/-/css-tree-3.2.1.tgz",
+       "integrity": "sha512-X7sjQzceUhu1u7Y/ylrRZFU2FS6LRiFVp6rKLPg23y3x3c3DOKAwuXGDp+PAGjh6CSnCjYeAul8pcT8bAl+lSA==",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "mdn-data": "2.27.1",
+         "source-map-js": "^1.2.1"
+       },
+       "engines": {
+         "node": "^10 || ^12.20.0 || ^14.13.0 || >=15.0.0"
+       }
+     },
+     "node_modules/css.escape": {
+       "version": "1.5.1",
+@@ -5507,20 +5560,63 @@
+         "url": "https://github.com/sponsors/ljharb"
+       }
+     },
+     "node_modules/graceful-fs": {
+       "version": "4.2.11",
+       "resolved": "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.11.tgz",
+       "integrity": "sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==",
+       "dev": true,
+       "license": "ISC"
+     },
++    "node_modules/happy-dom": {
++      "version": "20.10.6",
++      "resolved": "https://registry.npmjs.org/happy-dom/-/happy-dom-20.10.6.tgz",
++      "integrity": "sha512-6QD0ilzDDt93tX44y8tbmZdAcdTRYDhUP+Asgi6pC8Pp5IA3cvaZGyoVN/EGtlq9ziT65iPuBBn3ASLr6hCgVw==",
++      "dev": true,
++      "license": "MIT",
++      "peer": true,
++      "dependencies": {
++        "@types/node": ">=20.0.0",
++        "@types/whatwg-mimetype": "^3.0.2",
++        "@types/ws": "^8.18.1",
++        "buffer-image-size": "^0.6.4",
++        "entities": "^7.0.1",
++        "whatwg-mimetype": "^3.0.0",
++        "ws": "^8.21.0"
++      },
++      "engines": {
++        "node": ">=20.0.0"
++      }
++    },
++    "node_modules/happy-dom/node_modules/entities": {
++      "version": "7.0.1",
++      "resolved": "https://registry.npmjs.org/entities/-/entities-7.0.1.tgz",
++      "integrity": "sha512-TWrgLOFUQTH994YUyl1yT4uyavY5nNB5muff+RtWaqNVCAK408b5ZnnbNAUEWLTCpum9w6arT70i1XdQ4UeOPA==",
++      "dev": true,
++      "license": "BSD-2-Clause",
++      "engines": {
++        "node": ">=0.12"
++      },
++      "funding": {
++        "url": "https://github.com/fb55/entities?sponsor=1"
++      }
++    },
++    "node_modules/happy-dom/node_modules/whatwg-mimetype": {
++      "version": "3.0.0",
++      "resolved": "https://registry.npmjs.org/whatwg-mimetype/-/whatwg-mimetype-3.0.0.tgz",
++      "integrity": "sha512-nt+N2dzIutVRxARx1nghPKGv1xHikU7HKdfafKkLNLindmPU/ch3U31NOCGGA/dmPcmb1VlofO0vnKAcsm0o/Q==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=12"
++      }
++    },
+     "node_modules/has-bigints": {
+       "version": "1.1.0",
+       "resolved": "https://registry.npmjs.org/has-bigints/-/has-bigints-1.1.0.tgz",
+       "integrity": "sha512-R3pbpkcIqv2Pm3dUwgjclDRVmWpTJW2DcMzcIhEXEx1oh/CEMObMm3KLmRJOdvhM7o4uQBnwr8pzRK2sJWIqfg==",
+       "dev": true,
+       "license": "MIT",
+       "engines": {
+         "node": ">= 0.4"
+       },
+       "funding": {
+@@ -8740,20 +8836,21 @@
+       "funding": {
+         "url": "https://github.com/sponsors/jonschlinkert"
+       }
+     },
+     "node_modules/vitest": {
+       "version": "4.1.10",
+       "resolved": "https://registry.npmjs.org/vitest/-/vitest-4.1.10.tgz",
+       "integrity": "sha512-R9jUTe5S4Qb0HCd4TNqpC7oGcrMssMRGXLW80ubjWsW9VH5GF8y1Y0SFLY9AbqSk6nt0PnOx4H4WNJYZ13GUPw==",
+       "dev": true,
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "@vitest/expect": "4.1.10",
+         "@vitest/mocker": "4.1.10",
+         "@vitest/pretty-format": "4.1.10",
+         "@vitest/runner": "4.1.10",
+         "@vitest/snapshot": "4.1.10",
+         "@vitest/spy": "4.1.10",
+         "@vitest/utils": "4.1.10",
+         "es-module-lexer": "^2.0.0",
+         "expect-type": "^1.3.0",
+diff --git a/package.json b/package.json
+index eb06e13..29b404a 100644
+--- a/package.json
++++ b/package.json
+@@ -18,16 +18,17 @@
+     "@tailwindcss/postcss": "^4",
+     "@testing-library/jest-dom": "^6.9.1",
+     "@testing-library/react": "^16.3.2",
+     "@types/node": "^20",
+     "@types/react": "^19",
+     "@types/react-dom": "^19",
+     "@vitejs/plugin-react": "^4.7.0",
+     "@vitest/ui": "^4.1.10",
+     "eslint": "^9",
+     "eslint-config-next": "16.2.10",
++    "happy-dom": "^20.10.6",
+     "jsdom": "^27.0.1",
+     "tailwindcss": "^4",
+     "typescript": "^5",
+     "vitest": "^4.1.10"
+   }
+ }
+diff --git a/src/components/GameBoard.tsx b/src/components/GameBoard.tsx
+new file mode 100644
+index 0000000..b1ba839
+--- /dev/null
++++ b/src/components/GameBoard.tsx
+@@ -0,0 +1,76 @@
++'use client';
++import { useState, useEffect } from 'react';
++
++export type Point = { x: number; y: number };
++
++const GRID_SIZE = 7;
++
++export default function GameBoard({ activeCells, startPos }: { activeCells: Point[], startPos: Point }) {
++  const [path, setPath] = useState<Point[]>([startPos]);
++  const [isDrawing, setIsDrawing] = useState(false);
++
++  const won = path.length === activeCells.length;
++
++  useEffect(() => {
++    if (won) {
++      localStorage.setItem(`solved-${new Date().toLocaleDateString('en-CA')}`, 'true');
++    }
++  }, [won]);
++
++  const activeSet = new Set(activeCells.map(c => `${c.x},${c.y}`));
++  const pathSet = new Set(path.map(c => `${c.x},${c.y}`));
++
++  const isActive = (x: number, y: number) => activeSet.has(`${x},${y}`);
++  const isVisited = (x: number, y: number) => pathSet.has(`${x},${y}`);
++
++  const handlePointerDown = (x: number, y: number) => {
++    if (won) return;
++    const last = path[path.length - 1];
++    if (x === last.x && y === last.y) {
++      setIsDrawing(true);
++    }
++  };
++
++  const handlePointerEnter = (x: number, y: number) => {
++    if (!isDrawing || won || !isActive(x, y)) return;
++    const last = path[path.length - 1];
++    if (Math.abs(last.x - x) + Math.abs(last.y - y) === 1) {
++      if (path.length > 1 && path[path.length - 2].x === x && path[path.length - 2].y === y) {
++        setPath(p => p.slice(0, -1));
++      } else if (!isVisited(x, y)) {
++        setPath(p => [...p, {x, y}]);
++      }
++    }
++  };
++
++  return (
++    <div className="flex flex-col items-center">
++      <div 
++        className="grid grid-cols-7 gap-2 bg-zinc-900 p-4 rounded-xl"
++        onPointerUp={() => setIsDrawing(false)}
++        onPointerLeave={() => setIsDrawing(false)}
++      >
++        {Array.from({length: GRID_SIZE * GRID_SIZE}).map((_, i) => {
++          const x = i % GRID_SIZE;
++          const y = Math.floor(i / GRID_SIZE);
++          const active = isActive(x, y);
++          const visited = isVisited(x, y);
++          const isStart = startPos.x === x && startPos.y === y;
++          return (
++            <div 
++              key={i} 
++              data-testid={`cell-${x}-${y}`}
++              className={`cell w-10 h-10 md:w-16 md:h-16 rounded-lg select-none touch-none ${active ? 'active bg-zinc-800/80 backdrop-blur border border-zinc-700' : ''} ${visited ? 'bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.6)]' : ''} ${isStart && !visited ? 'animate-pulse bg-blue-400' : ''}`}
++              onPointerDown={(e) => { e.currentTarget.releasePointerCapture(e.pointerId); handlePointerDown(x, y); }}
++              onPointerEnter={() => handlePointerEnter(x, y)}
++            />
++          );
++        })}
++      </div>
++      <div className="mt-8 flex gap-4">
++        <button onClick={() => setPath([startPos])} className="px-6 py-2 bg-zinc-800 rounded text-white border border-zinc-700">Reset</button>
++      </div>
++      {won && <div className="mt-8 text-2xl text-green-400 font-bold animate-bounce">Puzzle Solved!</div>}
++    </div>
++  );
++}
+diff --git a/tests/GameBoard.test.tsx b/tests/GameBoard.test.tsx
+new file mode 100644
+index 0000000..6dd8019
+--- /dev/null
++++ b/tests/GameBoard.test.tsx
+@@ -0,0 +1,65 @@
++import { render, fireEvent, screen } from '@testing-library/react'
++import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
++import GameBoard from '@/components/GameBoard'
++
++describe('GameBoard', () => {
++  beforeEach(() => {
++    localStorage.clear()
++  })
++
++  afterEach(() => {
++    vi.restoreAllMocks()
++  })
++
++  it('renders active cells', () => {
++    const activeCells = [{x: 0, y: 0}, {x: 1, y: 0}]
++    const startPos = {x: 0, y: 0}
++    const { container } = render(<GameBoard activeCells={activeCells} startPos={startPos} />)
++    expect(container.querySelectorAll('.cell').length).toBe(49)
++    expect(container.querySelectorAll('.cell.active').length).toBe(2)
++  })
++
++  it('allows drawing a path, validates backtracking, triggers win, and reset button', () => {
++    const activeCells = [{x: 0, y: 0}, {x: 1, y: 0}, {x: 2, y: 0}]
++    const startPos = {x: 0, y: 0}
++    const { container } = render(<GameBoard activeCells={activeCells} startPos={startPos} />)
++    
++    const cell00 = container.querySelector('[data-testid="cell-0-0"]')!
++    const cell10 = container.querySelector('[data-testid="cell-1-0"]')!
++    const cell20 = container.querySelector('[data-testid="cell-2-0"]')!
++
++    // Start drawing
++    // Mock releasePointerCapture since JSDOM does not implement it
++    const releasePointerCapture = vi.fn()
++    cell00.releasePointerCapture = releasePointerCapture
++
++    fireEvent.pointerDown(cell00, { pointerId: 1 })
++    expect(releasePointerCapture).toHaveBeenCalledWith(1)
++
++    // Enter next valid cell
++    fireEvent.pointerEnter(cell10)
++    expect(cell10.className).toContain('bg-blue-500')
++
++    // Test backtracking (go back to 0,0)
++    fireEvent.pointerEnter(cell00)
++    expect(cell10.className).not.toContain('bg-blue-500') // cell10 should no longer be visited
++
++    // Go forward again
++    fireEvent.pointerEnter(cell10)
++    expect(cell10.className).toContain('bg-blue-500')
++    
++    // Test win condition by reaching last cell
++    fireEvent.pointerEnter(cell20)
++    expect(cell20.className).toContain('bg-blue-500')
++    expect(screen.getByText('Puzzle Solved!')).toBeInTheDocument()
++    expect(localStorage.getItem(`solved-${new Date().toLocaleDateString('en-CA')}`)).toBe('true')
++
++    // Test reset button
++    const resetBtn = screen.getByText('Reset')
++    fireEvent.click(resetBtn)
++    
++    expect(cell10.className).not.toContain('bg-blue-500')
++    expect(cell20.className).not.toContain('bg-blue-500')
++    expect(screen.queryByText('Puzzle Solved!')).not.toBeInTheDocument()
++  })
++})
+diff --git a/vitest.config.mts b/vitest.config.mts
+index 8d8e245..02d317b 100644
+--- a/vitest.config.mts
++++ b/vitest.config.mts
+@@ -1,20 +1,21 @@
+ import { defineConfig } from 'vitest/config'
+ import react from '@vitejs/plugin-react'
+ import path from 'path'
+ 
+ export default defineConfig({
+   plugins: [react()],
+   test: {
+     globals: true,
+-    environment: 'jsdom',
++    environment: 'happy-dom',
+     setupFiles: ['./vitest.setup.ts'],
+     alias: {
+       '@': path.resolve(__dirname, './src')
+     },
++    css: false,
+     server: {
+       deps: {
+-        inline: [/^(?!.*vitest).*$/]
++        inline: ['@asamuzakjp/css-color', '@csstools/css-calc', '@csstools/css-color-parser']
+       }
+     }
+   }
+ })
