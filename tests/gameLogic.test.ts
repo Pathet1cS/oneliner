@@ -13,7 +13,8 @@ describe('generatePuzzle', () => {
   
   it('generates a valid path of correct length', () => {
     const puzzle = generatePuzzle(testDate)
-    expect(puzzle.activeCells.length).toBe(40) // MAX_PATH_LENGTH
+    expect(puzzle.activeCells.length).toBeGreaterThanOrEqual(20)
+    expect(puzzle.activeCells.length).toBeLessThanOrEqual(45)
     // Start pos should be in activeCells
     const startInActive = puzzle.activeCells.some(c => c.x === puzzle.startPos.x && c.y === puzzle.startPos.y)
     expect(startInActive).toBe(true)

@@ -9,7 +9,8 @@ function mulberry32(a: number) {
 }
 
 export const GRID_SIZE = 7;
-export const MAX_PATH_LENGTH = 40;
+export const MIN_PATH_LENGTH = 20;
+export const MAX_PATH_LENGTH = 45;
 
 export function generatePuzzle(dateStr: string) {
   if (!dateStr || dateStr.trim() === '') {
@@ -23,6 +24,7 @@ export function generatePuzzle(dateStr: string) {
   
   const seed = parsedSeed;
   const random = mulberry32(seed);
+  const targetLength = Math.floor(random() * (MAX_PATH_LENGTH - MIN_PATH_LENGTH + 1)) + MIN_PATH_LENGTH;
   
   let startX = Math.floor(random() * GRID_SIZE);
   let startY = Math.floor(random() * GRID_SIZE);
@@ -34,7 +36,7 @@ export function generatePuzzle(dateStr: string) {
   function dfs(currentPath: {x: number, y: number}[], grid: boolean[][]) {
     if (finalPath) return; 
     
-    if (currentPath.length === MAX_PATH_LENGTH) {
+    if (currentPath.length === targetLength) {
       finalPath = [...currentPath];
       return;
     }
