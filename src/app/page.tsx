@@ -7,7 +7,7 @@ export default async function Home() {
   const dateStr = new Date().toLocaleDateString('id-ID', { timeZone: 'UTC' });
   
   try {
-    const { activeCells, startPos } = generatePuzzle("1/1/2026");
+    const { activeCells, startPos } = generatePuzzle(dateStr);
     
     return (
       <main className="min-h-screen bg-[#334173] flex flex-col items-center justify-center p-4 relative">

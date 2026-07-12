@@ -9,12 +9,24 @@ const GRID_SIZE = 7;
 export default function GameBoard({ activeCells, startPos }: { activeCells: Point[], startPos: Point }) {
   const [path, setPath] = useState<Point[]>([startPos]);
   const [isDrawing, setIsDrawing] = useState(false);
+  const [time, setTime] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
 
   const won = path.length === activeCells.length;
 
   useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isRunning && !won) {
+      interval = setInterval(() => {
+        setTime(t => t + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isRunning, won]);
+
+  useEffect(() => {
     if (won) {
-      localStorage.setItem(`solved-${new Date().toLocaleDateString('en-CA')}`, 'true');
+      localStorage.setItem(`solved-${new Date().toLocaleDateString('id-ID')}`, 'true');
     }
   }, [won]);
 
@@ -26,9 +38,13 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
 
   const handlePointerDown = (x: number, y: number) => {
     if (won) return;
-    const last = path[path.length - 1];
-    if (x === last.x && y === last.y) {
+    const pIndex = path.findIndex(p => p.x === x && p.y === y);
+    if (pIndex !== -1) {
+      if (pIndex !== path.length - 1) {
+        setPath(p => p.slice(0, pIndex + 1));
+      }
       setIsDrawing(true);
+      if (!isRunning) setIsRunning(true);
     }
   };
 
@@ -46,6 +62,9 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
 
   return (
     <div className="flex flex-col items-center">
+      <div className="text-black text-2xl md:text-3xl font-extrabold mb-6 tracking-widest shadow-[4px_4px_0px_#000000] px-4 py-2 bg-[#F7AF4C] border-4 border-black inline-block">
+        TIME {Math.floor(time / 60).toString().padStart(2, '0')}:{(time % 60).toString().padStart(2, '0')}
+      </div>
       <div 
         className="grid grid-cols-7 gap-3 bg-white p-6 shadow-[8px_8px_0px_#000000] relative overflow-hidden border-4 border-black"
         onPointerUp={() => setIsDrawing(false)}
@@ -72,6 +91,7 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
               key={i} 
               data-testid={`cell-${x}-${y}`}
               className={`relative cell w-10 h-10 md:w-16 md:h-16 select-none touch-none transition-none border-2 border-transparent ${active && !visited ? 'active bg-[#1A2548] border-[#F7AF4C] border-opacity-30' : ''} ${visited ? 'bg-[#F7AF4C] border-black shadow-[4px_4px_0px_#000000] z-10' : 'z-0'}`}
+              animate={visited ? { scale: [1, 1.2, 1], transition: { duration: 0.2 } } : { scale: 1 }}
               whileHover={active && !visited ? { scale: 1.1 } : {}}
               whileTap={active ? { scale: 0.9 } : {}}
               onPointerDown={(e) => { e.currentTarget.releasePointerCapture(e.pointerId); handlePointerDown(x, y); }}
@@ -119,7 +139,7 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
         )}
       </div>
       <div className="mt-10 flex gap-4">
-        <button onClick={() => setPath([startPos])} className="px-8 py-3 bg-[#F7AF4C] text-black font-bold tracking-widest uppercase border-4 border-black shadow-[4px_4px_0px_#000000] hover:translate-y-1 hover:shadow-[2px_2px_0px_#000000] transition-all">Reset</button>
+        <button onClick={() => { setPath([startPos]); setTime(0); setIsRunning(false); }} className="px-8 py-3 bg-[#F7AF4C] text-black font-bold tracking-widest uppercase border-4 border-black shadow-[4px_4px_0px_#000000] hover:translate-y-1 hover:shadow-[2px_2px_0px_#000000] transition-all">Reset</button>
       </div>
     </div>
   );
