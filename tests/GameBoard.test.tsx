@@ -16,7 +16,8 @@ describe('GameBoard', () => {
     const startPos = {x: 0, y: 0}
     const { container } = render(<GameBoard activeCells={activeCells} startPos={startPos} />)
     expect(container.querySelectorAll('.cell').length).toBe(49)
-    expect(container.querySelectorAll('.cell.active').length).toBe(2)
+    expect(container.querySelectorAll('.cell.active').length).toBe(1)
+    expect(container.querySelectorAll('.cell.bg-pink-100').length).toBe(1)
   })
 
   it('allows drawing a path, validates backtracking, triggers win, and reset button', () => {
@@ -38,28 +39,28 @@ describe('GameBoard', () => {
 
     // Enter next valid cell
     fireEvent.pointerEnter(cell10)
-    expect(cell10.className).toContain('bg-blue-500')
+    expect(cell10.className).toContain('bg-pink-100')
 
     // Test backtracking (go back to 0,0)
     fireEvent.pointerEnter(cell00)
-    expect(cell10.className).not.toContain('bg-blue-500') // cell10 should no longer be visited
+    expect(cell10.className).not.toContain('bg-pink-100') // cell10 should no longer be visited
 
     // Go forward again
     fireEvent.pointerEnter(cell10)
-    expect(cell10.className).toContain('bg-blue-500')
+    expect(cell10.className).toContain('bg-pink-100')
     
     // Test win condition by reaching last cell
     fireEvent.pointerEnter(cell20)
-    expect(cell20.className).toContain('bg-blue-500')
-    expect(screen.getByText('Puzzle Solved!')).toBeInTheDocument()
+    expect(cell20.className).toContain('bg-pink-100')
+    expect(screen.getByText(/Puzzle.*Solved!/i)).toBeInTheDocument()
     expect(localStorage.getItem(`solved-${new Date().toLocaleDateString('en-CA')}`)).toBe('true')
 
     // Test reset button
     const resetBtn = screen.getByText('Reset')
     fireEvent.click(resetBtn)
     
-    expect(cell10.className).not.toContain('bg-blue-500')
-    expect(cell20.className).not.toContain('bg-blue-500')
-    expect(screen.queryByText('Puzzle Solved!')).not.toBeInTheDocument()
+    expect(cell10.className).not.toContain('bg-pink-100')
+    expect(cell20.className).not.toContain('bg-pink-100')
+    expect(screen.queryByText(/Puzzle.*Solved!/i)).not.toBeInTheDocument()
   })
 })
