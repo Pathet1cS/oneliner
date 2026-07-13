@@ -26,7 +26,7 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
 
   useEffect(() => {
     if (won) {
-      localStorage.setItem(`solved-${new Date().toLocaleDateString('id-ID')}`, 'true');
+      localStorage.setItem(`solved-${new Date().toLocaleDateString('en-CA', { timeZone: 'UTC' })}`, 'true');
     }
   }, [won]);
 
@@ -61,12 +61,12 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="text-black text-2xl md:text-3xl font-extrabold mb-6 tracking-widest shadow-[4px_4px_0px_#000000] px-4 py-2 bg-[#F7AF4C] border-4 border-black inline-block">
+    <div className="flex flex-col items-center w-full">
+      <div className="text-black text-sm sm:text-lg md:text-3xl font-extrabold mb-2 md:mb-6 tracking-widest shadow-[4px_4px_0px_#000000] px-2 py-1 md:px-4 md:py-2 bg-[#F7AF4C] border-4 border-black inline-block">
         TIME {Math.floor(time / 60).toString().padStart(2, '0')}:{(time % 60).toString().padStart(2, '0')}
       </div>
       <div 
-        className="grid grid-cols-7 gap-3 bg-white p-6 shadow-[8px_8px_0px_#000000] relative overflow-hidden border-4 border-black"
+        className="grid grid-cols-7 gap-x-3 gap-y-1 sm:gap-2 md:gap-3 bg-white p-2 sm:p-4 md:p-6 shadow-[8px_8px_0px_#000000] relative overflow-hidden border-4 border-black w-full max-w-[min(100%,_700px,_calc(100dvh_-_180px))] md:max-w-[min(100%,_700px,_calc(100dvh_-_320px))] aspect-square"
         onPointerUp={() => setIsDrawing(false)}
         onPointerLeave={() => setIsDrawing(false)}
       >
@@ -90,7 +90,7 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
             <motion.div 
               key={i} 
               data-testid={`cell-${x}-${y}`}
-              className={`relative cell w-10 h-10 md:w-16 md:h-16 select-none touch-none transition-none border-2 border-transparent ${active && !visited ? 'active bg-[#1A2548] border-[#F7AF4C] border-opacity-30' : ''} ${visited ? 'bg-[#F7AF4C] border-black shadow-[4px_4px_0px_#000000] z-10' : 'z-0'}`}
+              className={`relative cell w-full aspect-square select-none touch-none transition-none border-2 border-transparent ${active && !visited ? 'active bg-[#1A2548] border-[#F7AF4C] border-opacity-30' : ''} ${visited ? 'bg-[#F7AF4C] border-black shadow-[4px_4px_0px_#000000] z-10' : 'z-0'}`}
               animate={visited ? { scale: [1, 1.2, 1], transition: { duration: 0.2 } } : { scale: 1 }}
               whileHover={active && !visited ? { scale: 1.1 } : {}}
               whileTap={active ? { scale: 0.9 } : {}}
@@ -99,12 +99,12 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
             >
               {active && (
                 <>
-                  {isStart && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 md:w-8 md:h-8 bg-white border-2 border-black z-20 pointer-events-none" />}
-                  {visited && !isStart && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 md:w-6 md:h-6 bg-white z-10 pointer-events-none" />}
-                  {connectTop && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 md:w-6 h-1/2 bg-white z-10 pointer-events-none" />}
-                  {connectBottom && <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 md:w-6 h-1/2 bg-white z-10 pointer-events-none" />}
-                  {connectLeft && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-4 md:h-6 w-1/2 bg-white z-10 pointer-events-none" />}
-                  {connectRight && <div className="absolute right-0 top-1/2 -translate-y-1/2 h-4 md:h-6 w-1/2 bg-white z-10 pointer-events-none" />}
+                  {isStart && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-white border-2 border-black z-20 pointer-events-none" />}
+                  {visited && !isStart && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40%] h-[40%] bg-white z-10 pointer-events-none" />}
+                  {connectTop && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[40%] h-1/2 bg-white z-10 pointer-events-none" />}
+                  {connectBottom && <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[40%] h-1/2 bg-white z-10 pointer-events-none" />}
+                  {connectLeft && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-[40%] w-1/2 bg-white z-10 pointer-events-none" />}
+                  {connectRight && <div className="absolute right-0 top-1/2 -translate-y-1/2 h-[40%] w-1/2 bg-white z-10 pointer-events-none" />}
                 </>
               )}
             </motion.div>
@@ -138,8 +138,8 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
           </div>
         )}
       </div>
-      <div className="mt-10 flex gap-4">
-        <button onClick={() => { setPath([startPos]); setTime(0); setIsRunning(false); }} className="px-8 py-3 bg-[#F7AF4C] text-black font-bold tracking-widest uppercase border-4 border-black shadow-[4px_4px_0px_#000000] hover:translate-y-1 hover:shadow-[2px_2px_0px_#000000] transition-all">Reset</button>
+      <div className="mt-2 md:mt-10 flex gap-4">
+        <button onClick={() => { setPath([startPos]); setTime(0); setIsRunning(false); }} className="px-4 py-2 md:px-8 md:py-3 text-sm md:text-base bg-[#F7AF4C] text-black font-bold tracking-widest uppercase border-2 md:border-4 border-black shadow-[4px_4px_0px_#000000] hover:translate-y-1 hover:shadow-[2px_2px_0px_#000000] transition-all">Reset</button>
       </div>
     </div>
   );

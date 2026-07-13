@@ -37,7 +37,24 @@ export function generatePuzzle(dateStr: string) {
     if (finalPath) return; 
     
     if (currentPath.length === targetLength) {
-      finalPath = [...currentPath];
+      const last = currentPath[currentPath.length - 1];
+      
+      // Count active neighbors of the last cell
+      let activeNeighbors = 0;
+      for (const {dx, dy} of dirs) {
+        const nx = last.x + dx;
+        const ny = last.y + dy;
+        if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+          if (grid[ny][nx]) {
+            activeNeighbors++;
+          }
+        }
+      }
+      
+      // Only accept if exactly 1 active neighbor (its predecessor)
+      if (activeNeighbors === 1) {
+        finalPath = [...currentPath];
+      }
       return;
     }
     
@@ -50,7 +67,7 @@ export function generatePuzzle(dateStr: string) {
       [shuffledDirs[j], shuffledDirs[k]] = [shuffledDirs[k], shuffledDirs[j]];
     }
     
-    for (let {dx, dy} of shuffledDirs) {
+    for (const {dx, dy} of shuffledDirs) {
       const nx = last.x + dx;
       const ny = last.y + dy;
       
