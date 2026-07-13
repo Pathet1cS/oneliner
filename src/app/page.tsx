@@ -10,7 +10,7 @@ export default async function Home() {
     const { activeCells, startPos } = generatePuzzle(dateStr);
     
     return (
-      <main className="min-h-screen bg-[#334173] flex flex-col items-center justify-center p-4 relative">
+      <main className="min-h-[100dvh] h-[100dvh] max-h-[100dvh] overflow-hidden bg-[#334173] flex flex-col items-center justify-center p-4 relative">
         <div className="crt-overlay"></div>
         <h1 className="text-6xl text-[#F7AF4C] mb-8 tracking-wider shadow-[4px_4px_0px_#000000]">
           ENILENO
@@ -20,7 +20,7 @@ export default async function Home() {
     );
   } catch (error) {
     return (
-      <main className="min-h-screen bg-[#334173] flex flex-col items-center justify-center p-4 relative">
+      <main className="min-h-[100dvh] h-[100dvh] max-h-[100dvh] overflow-hidden bg-[#334173] flex flex-col items-center justify-center p-4 relative">
         <div className="crt-overlay"></div>
         <h1 className="text-6xl text-[#F7AF4C] mb-8 tracking-wider shadow-[4px_4px_0px_#000000]">
           ENILENO
