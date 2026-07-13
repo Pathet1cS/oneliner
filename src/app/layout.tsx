@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Pixelify_Sans } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 const pixelify = Pixelify_Sans({
@@ -25,7 +26,10 @@ export default function RootLayout({
       lang="en"
       className={`${pixelify.variable} ${pixelify.className} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#334173] text-white">{children}</body>
+      <body className="min-h-full flex flex-col bg-[#334173] text-white">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
