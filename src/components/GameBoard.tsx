@@ -94,7 +94,10 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
               animate={visited ? { scale: [1, 1.2, 1], transition: { duration: 0.2 } } : { scale: 1 }}
               whileHover={active && !visited ? { scale: 1.1 } : {}}
               whileTap={active ? { scale: 0.9 } : {}}
-              onPointerDown={(e) => { e.currentTarget.releasePointerCapture(e.pointerId); handlePointerDown(x, y); }}
+              onPointerDown={(e) => { 
+                try { e.currentTarget.releasePointerCapture(e.pointerId); } catch (err) {} 
+                handlePointerDown(x, y); 
+              }}
               onPointerEnter={() => handlePointerEnter(x, y)}
             >
               {active && (
