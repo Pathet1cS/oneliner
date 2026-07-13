@@ -26,7 +26,7 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
 
   useEffect(() => {
     if (won) {
-      localStorage.setItem(`solved-${new Date().toLocaleDateString('en-CA', { timeZone: 'UTC' })}`, 'true');
+      localStorage.setItem(`solved-${new Date().toLocaleDateString('id-ID')}`, 'true');
     }
   }, [won]);
 
@@ -60,7 +60,7 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
     }
   };
 
-  return (
+   return (
     <div className="flex flex-col items-center w-full">
       <div className="text-black text-sm sm:text-lg md:text-3xl font-extrabold mb-2 md:mb-6 tracking-widest shadow-[4px_4px_0px_#000000] px-2 py-1 md:px-4 md:py-2 bg-[#F7AF4C] border-4 border-black inline-block">
         TIME {Math.floor(time / 60).toString().padStart(2, '0')}:{(time % 60).toString().padStart(2, '0')}
@@ -133,7 +133,7 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
               transition={{ type: "spring", bounce: 0.6 }}
               className="text-4xl md:text-5xl text-white font-extrabold shadow-[4px_4px_0px_#000000] text-center uppercase"
             >
-              Level<br/>Cleared!
+              Challenge<br/>Completed!
             </motion.div>
           </div>
         )}

@@ -10,6 +10,9 @@ const pixelify = Pixelify_Sans({
 export const metadata: Metadata = {
   title: "Enileno",
   description: "Enileno application",
+  icons: {
+    icon: "/enileno_logo.png",
+  },
 };
 
 export default function RootLayout({
