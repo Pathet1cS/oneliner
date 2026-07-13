@@ -62,11 +62,11 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
 
   return (
     <div className="flex flex-col items-center">
-      <div className="text-black text-2xl md:text-3xl font-extrabold mb-6 tracking-widest shadow-[4px_4px_0px_#000000] px-4 py-2 bg-[#F7AF4C] border-4 border-black inline-block">
+      <div className="text-black text-xl sm:text-2xl md:text-3xl font-extrabold mb-2 md:mb-6 tracking-widest shadow-[4px_4px_0px_#000000] px-4 py-2 bg-[#F7AF4C] border-4 border-black inline-block">
         TIME {Math.floor(time / 60).toString().padStart(2, '0')}:{(time % 60).toString().padStart(2, '0')}
       </div>
       <div 
-        className="grid grid-cols-7 gap-3 bg-white p-6 shadow-[8px_8px_0px_#000000] relative overflow-hidden border-4 border-black"
+        className="grid grid-cols-7 gap-x-3 gap-y-1 sm:gap-2 md:gap-3 bg-white p-2 sm:p-4 md:p-6 shadow-[8px_8px_0px_#000000] relative overflow-hidden border-4 border-black w-full max-w-[min(100%,_500px)] aspect-square"
         onPointerUp={() => setIsDrawing(false)}
         onPointerLeave={() => setIsDrawing(false)}
       >
