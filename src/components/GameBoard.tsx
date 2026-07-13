@@ -66,7 +66,7 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
         TIME {Math.floor(time / 60).toString().padStart(2, '0')}:{(time % 60).toString().padStart(2, '0')}
       </div>
       <div 
-        className="grid grid-cols-7 gap-x-3 gap-y-1 sm:gap-2 md:gap-3 bg-white p-2 sm:p-4 md:p-6 shadow-[8px_8px_0px_#000000] relative overflow-hidden border-4 border-black w-full max-w-[min(100%,_700px,_70dvh)] aspect-square"
+        className="grid grid-cols-7 gap-x-3 gap-y-1 sm:gap-2 md:gap-3 bg-white p-2 sm:p-4 md:p-6 shadow-[8px_8px_0px_#000000] relative overflow-hidden border-4 border-black w-full max-w-[min(100%,_700px,_calc(100dvh_-_180px))] md:max-w-[min(100%,_700px,_calc(100dvh_-_320px))] aspect-square"
         onPointerUp={() => setIsDrawing(false)}
         onPointerLeave={() => setIsDrawing(false)}
       >
