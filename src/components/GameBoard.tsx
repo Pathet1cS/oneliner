@@ -62,11 +62,11 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
 
   return (
     <div className="flex flex-col items-center">
-      <div className="text-black text-xl sm:text-2xl md:text-3xl font-extrabold mb-2 md:mb-6 tracking-widest shadow-[4px_4px_0px_#000000] px-4 py-2 bg-[#F7AF4C] border-4 border-black inline-block">
+      <div className="text-black text-sm sm:text-lg md:text-3xl font-extrabold mb-2 md:mb-6 tracking-widest shadow-[4px_4px_0px_#000000] px-2 py-1 md:px-4 md:py-2 bg-[#F7AF4C] border-4 border-black inline-block">
         TIME {Math.floor(time / 60).toString().padStart(2, '0')}:{(time % 60).toString().padStart(2, '0')}
       </div>
       <div 
-        className="grid grid-cols-7 gap-x-3 gap-y-1 sm:gap-2 md:gap-3 bg-white p-2 sm:p-4 md:p-6 shadow-[8px_8px_0px_#000000] relative overflow-hidden border-4 border-black w-full max-w-[min(100%,_500px)] aspect-square"
+        className="grid grid-cols-7 gap-x-3 gap-y-1 sm:gap-2 md:gap-3 bg-white p-2 sm:p-4 md:p-6 shadow-[8px_8px_0px_#000000] relative overflow-hidden border-4 border-black w-full max-w-[min(100%,_700px)] aspect-square"
         onPointerUp={() => setIsDrawing(false)}
         onPointerLeave={() => setIsDrawing(false)}
       >
@@ -138,8 +138,8 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
           </div>
         )}
       </div>
-      <div className="mt-10 flex gap-4">
-        <button onClick={() => { setPath([startPos]); setTime(0); setIsRunning(false); }} className="px-8 py-3 bg-[#F7AF4C] text-black font-bold tracking-widest uppercase border-4 border-black shadow-[4px_4px_0px_#000000] hover:translate-y-1 hover:shadow-[2px_2px_0px_#000000] transition-all">Reset</button>
+      <div className="mt-2 md:mt-10 flex gap-4">
+        <button onClick={() => { setPath([startPos]); setTime(0); setIsRunning(false); }} className="px-4 py-2 md:px-8 md:py-3 text-sm md:text-base bg-[#F7AF4C] text-black font-bold tracking-widest uppercase border-2 md:border-4 border-black shadow-[4px_4px_0px_#000000] hover:translate-y-1 hover:shadow-[2px_2px_0px_#000000] transition-all">Reset</button>
       </div>
     </div>
   );
