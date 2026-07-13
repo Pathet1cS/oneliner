@@ -53,7 +53,7 @@ describe('GameBoard', () => {
     fireEvent.pointerEnter(cell20)
     expect(cell20.className).toContain('bg-[#F7AF4C]')
     expect(screen.getByText(/Level.*Cleared!/i)).toBeInTheDocument()
-    expect(localStorage.getItem(`solved-${new Date().toLocaleDateString('en-CA')}`)).toBe('true')
+    expect(localStorage.getItem(`solved-${new Date().toLocaleDateString('en-CA', { timeZone: 'UTC' })}`)).toBe('true')
 
     // Test reset button
     const resetBtn = screen.getByText('Reset')

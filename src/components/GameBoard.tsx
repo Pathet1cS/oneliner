@@ -26,7 +26,7 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
 
   useEffect(() => {
     if (won) {
-      localStorage.setItem(`solved-${new Date().toLocaleDateString('id-ID')}`, 'true');
+      localStorage.setItem(`solved-${new Date().toLocaleDateString('en-CA', { timeZone: 'UTC' })}`, 'true');
     }
   }, [won]);
 

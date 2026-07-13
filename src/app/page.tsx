@@ -4,7 +4,7 @@ import GameBoard from '@/components/GameBoard';
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  const dateStr = new Date().toLocaleDateString('id-ID', { timeZone: 'UTC' });
+  const dateStr = new Date().toLocaleDateString('en-CA', { timeZone: 'UTC' });
   
   try {
     const { activeCells, startPos } = generatePuzzle(dateStr);
