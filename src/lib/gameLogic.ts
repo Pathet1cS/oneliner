@@ -41,7 +41,7 @@ export function generatePuzzle(dateStr: string) {
       
       // Count active neighbors of the last cell
       let activeNeighbors = 0;
-      for (let {dx, dy} of dirs) {
+      for (const {dx, dy} of dirs) {
         const nx = last.x + dx;
         const ny = last.y + dy;
         if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
@@ -67,7 +67,7 @@ export function generatePuzzle(dateStr: string) {
       [shuffledDirs[j], shuffledDirs[k]] = [shuffledDirs[k], shuffledDirs[j]];
     }
     
-    for (let {dx, dy} of shuffledDirs) {
+    for (const {dx, dy} of shuffledDirs) {
       const nx = last.x + dx;
       const ny = last.y + dy;
       
