@@ -90,7 +90,7 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
             <motion.div 
               key={i} 
               data-testid={`cell-${x}-${y}`}
-              className={`relative cell w-10 h-10 md:w-16 md:h-16 select-none touch-none transition-none border-2 border-transparent ${active && !visited ? 'active bg-[#1A2548] border-[#F7AF4C] border-opacity-30' : ''} ${visited ? 'bg-[#F7AF4C] border-black shadow-[4px_4px_0px_#000000] z-10' : 'z-0'}`}
+              className={`relative cell w-full aspect-square select-none touch-none transition-none border-2 border-transparent ${active && !visited ? 'active bg-[#1A2548] border-[#F7AF4C] border-opacity-30' : ''} ${visited ? 'bg-[#F7AF4C] border-black shadow-[4px_4px_0px_#000000] z-10' : 'z-0'}`}
               animate={visited ? { scale: [1, 1.2, 1], transition: { duration: 0.2 } } : { scale: 1 }}
               whileHover={active && !visited ? { scale: 1.1 } : {}}
               whileTap={active ? { scale: 0.9 } : {}}
@@ -99,12 +99,12 @@ export default function GameBoard({ activeCells, startPos }: { activeCells: Poin
             >
               {active && (
                 <>
-                  {isStart && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 md:w-8 md:h-8 bg-white border-2 border-black z-20 pointer-events-none" />}
-                  {visited && !isStart && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 md:w-6 md:h-6 bg-white z-10 pointer-events-none" />}
-                  {connectTop && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 md:w-6 h-1/2 bg-white z-10 pointer-events-none" />}
-                  {connectBottom && <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 md:w-6 h-1/2 bg-white z-10 pointer-events-none" />}
-                  {connectLeft && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-4 md:h-6 w-1/2 bg-white z-10 pointer-events-none" />}
-                  {connectRight && <div className="absolute right-0 top-1/2 -translate-y-1/2 h-4 md:h-6 w-1/2 bg-white z-10 pointer-events-none" />}
+                  {isStart && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-white border-2 border-black z-20 pointer-events-none" />}
+                  {visited && !isStart && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40%] h-[40%] bg-white z-10 pointer-events-none" />}
+                  {connectTop && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[40%] h-1/2 bg-white z-10 pointer-events-none" />}
+                  {connectBottom && <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[40%] h-1/2 bg-white z-10 pointer-events-none" />}
+                  {connectLeft && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-[40%] w-1/2 bg-white z-10 pointer-events-none" />}
+                  {connectRight && <div className="absolute right-0 top-1/2 -translate-y-1/2 h-[40%] w-1/2 bg-white z-10 pointer-events-none" />}
                 </>
               )}
             </motion.div>
